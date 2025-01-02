@@ -12,6 +12,7 @@
   "author": "baha & mohammed",
   "license": "ISC",
   "dependencies": {
+    "@graphql-tools/merge": "^9.0.15",
     "apollo-server": "^3.13.0",
     "dotenv": "^16.4.7",
     "graphql": "^16.10.0",

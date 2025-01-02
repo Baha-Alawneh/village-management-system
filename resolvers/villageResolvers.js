@@ -1,6 +1,6 @@
 import { getVillages,getVillageByName, addVillage,updateVillageData, deleteVillageByName } from '../models/village.js';
 
-export const resolvers = {
+const resolvers = {
     Query: {
         villages: getVillages,
         village:async(parent,args) => {
@@ -23,3 +23,4 @@ export const resolvers = {
         },
     },
 };
+export default  resolvers;
