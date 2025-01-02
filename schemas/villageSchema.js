@@ -1,6 +1,6 @@
 import { gql } from 'apollo-server';
 
-export const typeDefs = gql`
+ const typeDefs = gql`
   type Village {
     village_id: ID!
     village_name: String!
@@ -33,3 +33,4 @@ export const typeDefs = gql`
     deleteVillage(villageName: String!): String!
   }
 `;
+export default typeDefs;
