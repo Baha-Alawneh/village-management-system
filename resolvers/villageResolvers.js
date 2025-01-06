@@ -10,7 +10,7 @@ const resolvers = {
     },
     Mutation: {
         addVillage: async (parent, args) => {
-           const result= addVillage(args.villageData);
+           const result= await addVillage(args.villageData);
            return result;
         },
         updateVillage: async (parent, args) => {
@@ -18,7 +18,7 @@ const resolvers = {
            return result;
         },
         deleteVillage: async (parent, args) => {
-        const result= deleteVillageByName(args.villageName);
+        const result= await deleteVillageByName(args.villageName);
         return result;
         },
     },
