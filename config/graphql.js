@@ -5,11 +5,14 @@ import  villageTypeDefs  from '../schemas/villageSchema.js';
 import  villageResolvers  from '../resolvers/villageResolvers.js';
 import demographicTypeDefs from '../schemas/demographicsSchema.js';
 import demographicResolvers from '../resolvers/demographicResolvers.js';
+import authTypeDefs from '../schemas/authSchema.js';
+import authResolvers from '../resolvers/authResolvers.js';
+
 import galleryTypeDefs from '../schemas/gallerySchema.js'
 import galleryResolvers from '../resolvers/galleryResolver.js'
 export const createGraphQLServer = () => {
-  const typeDefs = mergeTypeDefs([villageTypeDefs, demographicTypeDefs,galleryTypeDefs]);
-  const resolvers = mergeResolvers([villageResolvers, demographicResolvers,galleryResolvers]);
+  const typeDefs = mergeTypeDefs([villageTypeDefs, demographicTypeDefs,galleryTypeDefs,authTypeDefs]);
+  const resolvers = mergeResolvers([villageResolvers, demographicResolvers,galleryResolvers,authResolvers]);
   const schema = makeExecutableSchema({
     typeDefs,
     resolvers,
