@@ -1,30 +1,31 @@
 import { gql } from 'apollo-server';
 
- const typeDefs = gql`
+const typeDefs = gql`
   type Village {
     village_id: ID!
     village_name: String!
     region: String!
     land_area: String!
-    latitude: Float!     # Changed from Number to Float
-    longitude: Float!    # Changed from Number to Float
+    latitude: Float!
+    longitude: Float!
     categories: String!
-    image_url: String!
+    image_url: String!   # This will store the uploaded image URL
   }
 
   type Query {
     villages: [Village!]
     village(village_name: String!): Village
+    villageById(village_id: ID!): Village
   }
 
-  input VillageInput {     # Corrected input type name
+  input VillageInput {
     villageName: String!
     region: String!
     landArea: String!
     latitude: Float!
     longitude: Float!
     categories: String!
-    image_url: String!
+    imageBase64: String!   # Expecting image URL to be passed when creating/updating
   }
 
   type Mutation {
@@ -33,4 +34,7 @@ import { gql } from 'apollo-server';
     deleteVillage(villageName: String!): String!
   }
 `;
+
 export default typeDefs;
+
+
