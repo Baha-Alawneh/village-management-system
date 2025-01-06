@@ -14,11 +14,11 @@ const resolvers = {
               if(isExist!="User not found"){
                   throw  new AlreadyExistsError("user already exists");
               }
-              const hashedPassword=hashPassword(args.password);
+              const hashedPassword=await hashPassword(args.input.password);
                 const user ={
-                    username: args.username,
+                    username: args.input.username,
                     password: hashedPassword,
-                    full_name: args.full_name,
+                    full_name: args.input.full_name,
                     role: "user"
                 }
                 await registerUser(user);
