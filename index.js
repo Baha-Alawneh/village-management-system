@@ -45,7 +45,7 @@ app.use('/uploads', express.static('uploads'));
 app.use(express.json({ limit: '50mb' }));
 app.use(express.urlencoded({ limit: '50mb', extended: true }));
 // Start the server
-app.listen(port, () => {
+const server = app.listen(port, () => {
   console.log(`Server running at http://localhost:${port}`);
 });
 server.on('upgrade', (request, socket, head) => {
