@@ -26,9 +26,9 @@ export const getDemographicById = async(id) => {
     return row[0];
 }
 
+
 export const getDemographicByName =async (name) => {
-    const village = await getVillageByName(name);
-    const [rows] =await db.query('SELECT * FROM demographics WHERE village_id =?', [village.village_id]);
+    const [rows] =await db.query('SELECT * FROM demographics join villages ON demographics.village_id = villages.village_id  WHERE villages.village_name = ?', [name]);
     if (rows.length == 0 || !rows)
         throw new NotFoundError("No demographic found with the given name");
 

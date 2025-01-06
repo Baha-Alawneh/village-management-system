@@ -78,8 +78,8 @@ const resolvers = {
 
         // Delete a village by its name
         deleteVillage: async (parent, args) => {
-            const result = await deleteVillageByName(args.villageName);
-            return result;
+        const result= await deleteVillageByName(args.villageName);
+        return result;
         },
     },
 };
