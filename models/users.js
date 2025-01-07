@@ -1,9 +1,6 @@
 import db from "../config/db.js";
 import { NotFoundError } from "../utils/errors.js";
 import { v4 as uuidv4 } from 'uuid';
-import { hashPassword } from "../utils/hash.js";
-
-
 
 export const getUserByName=async(name)=> {
     const user = await db.query("SELECT * FROM users WHERE username = ?", [name]);
@@ -37,10 +34,9 @@ export const findUser = async (username) => {
 export const registerUser=async(user) => {
     const {username,password,full_name,role} = user;
     const id = uuidv4();
-    const hashedPassword = await hashPassword(password);
     const newUser = db.query(
         "INSERT INTO users (user_id, username, full_name, password, role) VALUES (?,?,?,?,?)",
-        [id, username, full_name, hashedPassword, role]
+        [id, username, full_name, password, role]
     );
     return newUser;
 
