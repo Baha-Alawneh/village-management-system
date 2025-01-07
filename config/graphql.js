@@ -9,9 +9,11 @@ import authTypeDefs from '../schemas/authSchema.js';
 import authResolvers from '../resolvers/authResolvers.js';
 import authenticateToken from "../middleware/authenticate.js";
 
+import galleryTypeDefs from '../schemas/gallerySchema.js'
+import galleryResolvers from '../resolvers/galleryResolver.js'
 export const createGraphQLServer = () => {
-  const typeDefs = mergeTypeDefs([villageTypeDefs, demographicTypeDefs,authTypeDefs]);
-  const resolvers = mergeResolvers([villageResolvers, demographicResolvers,authResolvers]);
+  const typeDefs = mergeTypeDefs([villageTypeDefs, demographicTypeDefs,galleryTypeDefs,authTypeDefs]);
+  const resolvers = mergeResolvers([villageResolvers, demographicResolvers,galleryResolvers,authResolvers]);
   const schema = makeExecutableSchema({
     typeDefs,
     resolvers,
