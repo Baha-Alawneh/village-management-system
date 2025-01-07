@@ -19,11 +19,11 @@ export const createGraphQLServer = () => {
   const server = new ApolloServer({
     schema,
     playground: true,
-  //   context: ({ req }) => {
-  //     const isAuthFreeOperation = ['signup', 'login'].includes(operationName);
-  //     const user = authenticateToken(req, isAuthFreeOperation); 
-  //     return { user };
-  //   },
+    context: ({ req }) => {
+      const isAuthFreeOperation = ['signup', 'login'].includes(operationName);
+      const user = authenticateToken(req, isAuthFreeOperation); 
+      return { user };
+    },
   }
   );
 
