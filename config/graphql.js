@@ -21,15 +21,15 @@ export const createGraphQLServer = () => {
   const server = new ApolloServer({
     schema,
     playground: true,
-    // context: async ({ req }) => {
-    //   const isAuthFreeOperation = ['signup', 'login'].includes(req.body.operationName);
-    //   try {
-    //     const user = await authenticateToken(req, isAuthFreeOperation);
-    //     return { user }; 
-    //   } catch (err) {
-    //     throw new Error(err.message);
-    //   }
-    // },
+    context: async ({ req }) => {
+      const isAuthFreeOperation = ['signup', 'login'].includes(req.body.operationName);
+      try {
+        const user = await authenticateToken(req, isAuthFreeOperation);
+        return { user }; 
+      } catch (err) {
+        throw new Error(err.message);
+      }
+    },
   });
 
   return server;
