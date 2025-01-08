@@ -9,7 +9,7 @@ dotenv.config();
 
 // Initialize Express app
 const app = express();
-const port = process.env.PORT || 4000;
+const port =  4000;
 
 // Configure Multer for image uploads
 const storage = multer.diskStorage({
