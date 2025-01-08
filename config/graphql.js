@@ -7,6 +7,7 @@ import demographicTypeDefs from '../schemas/demographicsSchema.js';
 import demographicResolvers from '../resolvers/demographicResolvers.js';
 import authTypeDefs from '../schemas/authSchema.js';
 import authResolvers from '../resolvers/authResolvers.js';
+import authenticateToken from "../middleware/authenticate.js";
 
 import galleryTypeDefs from '../schemas/gallerySchema.js'
 import galleryResolvers from '../resolvers/galleryResolver.js'
@@ -20,10 +21,20 @@ export const createGraphQLServer = () => {
   const server = new ApolloServer({
     schema,
     playground: true,
+    context: async ({ req }) => {
+      const isAuthFreeOperation = ['signup', 'login'].includes(req.body.operationName);
+      try {
+        const user = await authenticateToken(req, isAuthFreeOperation);
+        return { user }; 
+      } catch (err) {
+        throw new Error(err.message);
+      }
+    },
   });
 
   return server;
 };
+
 
 
 

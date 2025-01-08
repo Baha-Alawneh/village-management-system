@@ -3,13 +3,16 @@ import dotenv from 'dotenv';
 import multer from 'multer';
 import path from 'path';
 import { createGraphQLServer } from './config/graphql.js';
+import { wss } from './config/socket.js';
 
 // Configure environment variables
 dotenv.config();
 
+
 // Initialize Express app
 const app = express();
 const port =  4000;
+
 
 // Configure Multer for image uploads
 const storage = multer.diskStorage({
@@ -53,3 +56,5 @@ server.on('upgrade', (request, socket, head) => {
     wss.emit('connection', ws, request);
   });
 });
+
+

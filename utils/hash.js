@@ -1,12 +1,12 @@
-import bcrypt from 'bcrypt';
+import argon2 from 'argon2';
 
 const hashPassword = async (password) => {
-  const saltRounds = 10;
-  return await bcrypt.hash(password, saltRounds);
+   return await argon2.hash(password);
 };
 
 const comparePassword = async (password, hashedPassword) => {
-  return await bcrypt.compare(password, hashedPassword);
+    console.log('pass', password, hashedPassword);
+   return argon2.verify(hashedPassword, password);
 };
 
 export { hashPassword, comparePassword };
