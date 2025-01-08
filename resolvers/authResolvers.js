@@ -1,50 +1,92 @@
-import { findUser, registerUser } from "../models/users.js"
-import { AlreadyExistsError, InvalidCredentialsError,NotFoundError } from "../utils/errors.js";
+import { findUser, registerUser,findUserById,getAdmins, getUsers } from "../models/users.js";
+import { AlreadyExistsError, InvalidCredentialsError, NotFoundError } from "../utils/errors.js";
 import { hashPassword, comparePassword } from "../utils/hash.js";
 import { generateToken } from "../utils/jwt.js";
-const resolvers = {
-    Mutation: {
-        signup: async (parent, args) => {
-            try {
-            const isExist = await findUser(args.username);
-            if (isExist != "User not found") {
-                throw new AlreadyExistsError("user already exists");
-            }
-            const hashedPassword = await hashPassword(args.input.password);
-            const user = {
-                username: args.input.username,
-                password: hashedPassword,
-                full_name: args.input.full_name,
-                role: "user"
-            }
-            await registerUser(user);
-            return "signup successfully";
-        }catch(err) {
-            return err.message;
-        }
-        },
-        login: async (parent, args) => {
-            try {
-            const username = args.input.username.trim();
-            const password = args.input.password.trim();;
-            const user = await findUser(username);
-            if (!user) {
-                throw new NotFoundError("User not found");
-            }
-             const hashedPassword = user.password;
-            const isMatch =await comparePassword(password,hashedPassword.trim());
-            if (!isMatch) {
-                throw new InvalidCredentialsError("Invalid credentials");
-            }
-            const token = await generateToken(user.user_id, user.role);
-            return { token };
-        }
-        catch (error) {
-           return error.message;
-        }
-        }
-    }
-}
 
+const resolvers = {
+  Query: {
+    userById: async (parent, args) => {
+      try {
+        const user = await findUserById(args.id);
+        
+        if (!user) {
+          throw new NotFoundError("User not found");
+        }
+        return user[0]; // Return the user data if found
+      } catch (error) {
+        console.error("Error occurred:", error); // Log the error for debugging
+        throw new Error(error.message || "An error occurred during user lookup.");
+      }
+    },
+    admins:async(parent,args)=> {
+      try {
+        const admins=await getAdmins();
+        if (!admins) {
+          throw new NotFoundError("No admins found");
+        }
+        return admins;
+      } catch (error) {
+        throw new Error(error.message || "An error occurred while fetching admins.");
+      }
+    },
+    users:async(parent,args)=> {
+      try {
+        const users=await getUsers();
+        if (!users) {
+          throw new NotFoundError("No users found");
+        }
+        return users;
+      } catch (error) {
+        throw new Error(error.message || "An error occurred while fetching users.");
+      }
+    },
+  }
+  ,
+  Mutation: {
+    signup: async (parent, args) => {
+      try {
+        const { username, password, full_name } = args.input;
+        const isExist = await findUser(username);
+        if (isExist !== "User not found") {
+          throw new AlreadyExistsError("User already exists");
+        }
+        const hashedPassword = await hashPassword(password);
+        const user = {
+          username,
+          password: hashedPassword,
+          full_name,
+          role: "user",
+        };
+
+        await registerUser(user);
+        return "Signup successful";
+      } catch (err) {
+        throw new Error(err.message || "An error occurred during signup.");
+      }
+    },
+
+    login: async (parent, args) => {
+      try {
+        const { username, password } = args.input;
+
+        const user = await findUser(username);
+        if (!user) {
+          throw new NotFoundError("User not found");
+        }
+
+        const isMatch = await comparePassword(password, user.password);
+        if (!isMatch) {
+          throw new InvalidCredentialsError("Invalid credentials");
+        }
+
+        const token = await generateToken(user.user_id, user.role);
+        return { token };
+      } catch (error) {
+        throw new Error(error.message || "An error occurred during login.");
+      }
+    },
+    
+  },
+};
 
 export default resolvers;

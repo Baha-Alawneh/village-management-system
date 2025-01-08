@@ -10,10 +10,16 @@ export const getUserByName=async(name)=> {
 }
 
 export const getAdmins=async()=> {
-        const admins = await db.query("SELECT * FROM users WHERE role = 'admin'");
+        const [admins] = await db.query("SELECT * FROM users WHERE role = 'admin'");
         if(!admins||admins.length==0)
             throw new NotFoundError("No admins found");
         return admins;
+}
+export const getUsers=async()=> {
+    const [users] = await db.query("SELECT * FROM users WHERE role = 'user'");
+        if(!users||users.length==0)
+            throw new NotFoundError("No users found");
+        return users;
 }
 
 export const findUser = async (username) => {
@@ -42,3 +48,13 @@ export const registerUser=async(user) => {
 
 
 }
+export const findUserById = async (id) => {
+    console.log(id);
+    const user = await db.query('SELECT * FROM users WHERE user_id = ?', [id]);
+     console.log(user[0]);
+    if (!user || user.length === 0) {
+      return null; // or throw a NotFoundError, if preferred
+    }
+  
+    return user[0]; // Returning the first user if found
+  };
