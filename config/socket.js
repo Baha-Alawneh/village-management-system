@@ -1,5 +1,6 @@
 import { WebSocketServer, WebSocket } from 'ws';
 import { getAdmins,findUserById,findUser } from "../models/users.js";
+import { insertOrUpdateChat,getChatByUserAndAdmin } from '../models/chat.js';
 
 export const wss = new WebSocketServer({ noServer: true });
 
@@ -42,12 +43,14 @@ wss.on("connection", (ws, request) => {
 
         if (user.length === 0) {
           console.log(`User ${from} not found in the database.`);
-          ws.close();
+          ws.close(getChatByUserAndAdmin());
         }
 
       console.log(`Direct Message from ${from} to ${to}`);
       console.log(isAdmin);
       if (isAdmin) {
+        insertOrUpdateChat(to,from,from+":"+message.content);
+        console.log(to,from);
        console.log("Direct Message from admin:", from);
        console.log("Direct Message to user:", to);
         const clientWs = clients.get(to)?.ws;
@@ -61,6 +64,7 @@ wss.on("connection", (ws, request) => {
           }));
         }
       } else {
+        insertOrUpdateChat(from,to,from+":"+message.content);
          console.log("hereeeee");
         const adminWs = admins.get(to)?.ws;
         if (adminWs && adminWs.readyState === WebSocket.OPEN) {

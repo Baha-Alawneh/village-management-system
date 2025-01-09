@@ -58,3 +58,6 @@ export const findUserById = async (id) => {
   
     return user[0]; // Returning the first user if found
   };
+
+
+  
