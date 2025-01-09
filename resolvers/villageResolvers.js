@@ -24,7 +24,7 @@ const resolvers = {
             // Assuming `args.villageData.imageUrl` is the URL of the uploaded image
             const { villageName, region, landArea, latitude, longitude, categories, imageBase64 } = args.villageData;
             
-
+            
             // Decode Base64 image
             const base64Data = imageBase64.replace(/^data:image\/\w+;base64,/, '');
             const buffer = Buffer.from(base64Data, 'base64');
@@ -58,8 +58,24 @@ const resolvers = {
 
         // Update an existing village with new image URL
         updateVillage: async (parent, args) => {
-            const { villageName, region, landArea, latitude, longitude, categories, imageUrl } = args.villageData;
+            const { villageName, region, landArea, latitude, longitude, categories, imageBase64 } = args.villageData;
+            console.log(villageName);
+            let imageUrl=null;
+            if(imageBase64 != "") {
+        
+                // Decode Base64 image
+                const base64Data = imageBase64.replace(/^data:image\/\w+;base64,/, '');
+                const buffer = Buffer.from(base64Data, 'base64');
+                const imageName = `${villageName.replace(/\s+/g, '_')}_${Date.now()}.jpg`;
+                const imagePath = path.join(process.cwd(), 'uploads', imageName);
+                console.log(buffer);
 
+                // Save image to the uploads directory
+                fs.writeFileSync(imagePath, buffer);
+
+                // Save village data and image URL in the database
+                 imageUrl = `http://localhost:4000/uploads/${imageName}`;
+            }
             // Prepare the updated village data
             const updatedVillage = {
                 village_name: villageName,
@@ -78,6 +94,7 @@ const resolvers = {
 
         // Delete a village by its name
         deleteVillage: async (parent, args) => {
+        console.log(args);
         const result= await deleteVillageByName(args.villageName);
         return result;
         },

@@ -58,25 +58,28 @@ export const addVillage = async (villageData) => {
 }
 
 export const updateVillageData = async (villageData) => {
-    if (!villageData.image_url) {
-        throw new Error('Image URL is required');
+    const villageBeforeUpdate = await getVillageByName(villageData.village_name);
+    console.log(villageBeforeUpdate);
+    const id = villageBeforeUpdate.village_id;
+    const params = [
+        villageData.region,
+        villageData.land_area,
+        villageData.latitude,
+        villageData.longitude,
+        villageData.categories,
+    ]
+    let updateQuery = 'UPDATE villages SET region = ?, land_area = ?, latitude = ?, longitude = ?, categories = ?';
+    if (villageData.image_url != null) {
+        updateQuery += ', image_url =?'; 
+        params.push(villageData.image_url);
     }
-
+    
+    updateQuery += 'WHERE village_id = ?';
+    params.push(id);
     // Use village_id for updates for uniqueness
-    await db.query(
-        'UPDATE villages SET region = ?, land_area = ?, latitude = ?, longitude = ?, categories = ?, image_url = ? WHERE village_id = ?',
-        [
-            villageData.region,
-            villageData.landArea,
-            villageData.latitude,
-            villageData.longitude,
-            villageData.categories,
-            villageData.image_url,
-            villageData.villageId, // Assuming you pass village_id for updates
-        ]
-    );
+    await db.query(updateQuery, params);
 
-    const [updatedVillage] = await db.query('SELECT * FROM villages WHERE village_id = ?', [villageData.villageId]);
+    const [updatedVillage] = await db.query('SELECT * FROM villages WHERE village_id = ?', [id]);
 
     if (!updatedVillage || updatedVillage.length === 0) {
         throw new NotFoundError('No village found with the given ID');

@@ -26,6 +26,11 @@ export const getDemographicById = async(id) => {
     return row[0];
 }
 
+export const getDemographicByVillageId = async(id) => {
+    const [row] =await db.query('SELECT * FROM demographics WHERE village_id =?', [id]);
+    return row;
+}
+
 
 export const getDemographicByName =async (name) => {
     const [rows] =await db.query('SELECT * FROM demographics join villages ON demographics.village_id = villages.village_id  WHERE villages.village_name = ?', [name]);
@@ -36,10 +41,6 @@ export const getDemographicByName =async (name) => {
 }
 
 export const createDemographic = async (data) => {
-    const demographic = await getDemographicByName(data.village_name);
-    if(demographic.length >0) {
-        throw new AlreadyExistsError("Demographic already exists");
-    }
     const demographic_id = uuid();
     await db.query('INSERT INTO demographics values (?,?,?,?,?,?)', [demographic_id,
          data.village_id, 
@@ -52,16 +53,12 @@ export const createDemographic = async (data) => {
 }
 
 export const updateDemographic = async (data) => {
-    const demographic = await getDemographicById(data.demographic_id);
-    if(!demographic) {
-        throw new AlreadyExistsError("Demographic not found");
-    }
-    await db.query('UPDATE demographics SET population_size=?, age_distribution=?, gender_ratios=?, population_growth_rate=? WHERE demographic_id=?', [
+    await db.query('UPDATE demographics SET population_size=?, age_distribution=?, gender_ratios=?, population_growth_rate=? WHERE village_id=?', [
         data.population_size,
         data.age_distribution,
         data.gender_ratios,
         data.population_growth_rate,
-        data.demographic_id
+        data.village_id,
     ]);
     return "updated successfully";
 }

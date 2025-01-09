@@ -22,7 +22,7 @@ const typeDefs = gql`
     population_growth_rate: String!
   }
   type Mutation {
-    createDemographicData(data: demographicInput): String!
+    createDemographic(data: demographicInput): String!
     updateDemographicData(data: demographicInput): String!
     deleteDemographicData(villageId: ID!): String!
   }
