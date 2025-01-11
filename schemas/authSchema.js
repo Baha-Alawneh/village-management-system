@@ -33,6 +33,7 @@ type Query {
 type Mutation {
   signup(input: SignupInput): String!
   login(input: loginInput): loginResponse!
+  logout(token: String):String
 }
 `;
 
