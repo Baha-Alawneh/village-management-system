@@ -9,7 +9,7 @@ const app = express();
 const port =  4000;
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    cb(null, 'uploads/'); // Folder where images will be stored
+    cb(null, 'uploads/');
   },
   filename: (req, file, cb) => {
     const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
@@ -19,23 +19,17 @@ const storage = multer.diskStorage({
 
 const upload = multer({ storage: storage });
 
-// Create a GraphQL server
 const graphqlServer = createGraphQLServer();
 await graphqlServer.start();
 graphqlServer.applyMiddleware({ app });
-
-// API endpoint for image upload(this is just for images, we have used graphql for all core features )
 app.post('/upload', upload.single('image'), (req, res) => {
   if (!req.file) {
     return res.status(400).send('No file uploaded.');
   }
 
-  // Construct the image URL 
   const imageUrl = `${req.protocol}://${req.get('host')}/uploads/${req.file.filename}`;
   res.status(200).json({ imageUrl: imageUrl });
 });
-
-// Serve static files from the 'uploads' directory (this is api is jus for images uploading)
 app.use('/uploads', express.static('uploads'));
 app.use(express.json({ limit: '50mb' }));
 app.use(express.urlencoded({ limit: '50mb', extended: true }));
