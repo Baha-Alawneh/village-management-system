@@ -5,5 +5,6 @@ export const addToBlacklist = (token) => {
 };
 
 export const isBlacklisted = (token) => {
+    console.log('isBlacklisted', token);
     return blacklistedTokens.has(token);
 };

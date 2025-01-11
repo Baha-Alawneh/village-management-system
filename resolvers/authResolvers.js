@@ -2,6 +2,7 @@ import { findUser, registerUser,findUserById,getAdmins, getUsers } from "../mode
 import { AlreadyExistsError, InvalidCredentialsError, NotFoundError } from "../utils/errors.js";
 import { hashPassword, comparePassword } from "../utils/hash.js";
 import { generateToken } from "../utils/jwt.js";
+import { addToBlacklist } from "../utils/blacklist.js";
 
 const resolvers = {
   Query: {
@@ -84,6 +85,10 @@ const resolvers = {
       } catch (error) {
         throw new Error(error.message || "An error occurred during login.");
       }
+    },
+    logout:(parent,args) => {
+      const token= args.token;
+      addToBlacklist(token);
     },
     
   },

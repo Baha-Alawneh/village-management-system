@@ -6,11 +6,11 @@ import { getVillageByName } from "./village.js";
 
 export const getDemographics = async () => {
     try {
-        const [rows] = await db.query('SELECT * FROM demographics'); // Await the result of the query
+        const [rows] = await db.query('SELECT * FROM demographics');
         if (!rows || rows.length === 0) {
             throw new NotFoundError("No demographics found");
         }
-        return rows; // Ensure an array is returned
+        return rows;
     } catch (error) {
         console.error("Error fetching demographics:", error.message);
         throw new Error("Failed to fetch demographics");
