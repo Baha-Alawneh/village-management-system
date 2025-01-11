@@ -24,18 +24,18 @@ const graphqlServer = createGraphQLServer();
 await graphqlServer.start();
 graphqlServer.applyMiddleware({ app });
 
-// API endpoint for image upload
+// API endpoint for image upload(this is just for images, we have used graphql for all core features )
 app.post('/upload', upload.single('image'), (req, res) => {
   if (!req.file) {
     return res.status(400).send('No file uploaded.');
   }
 
-  // Construct the image URL (adjust according to your setup)
+  // Construct the image URL 
   const imageUrl = `${req.protocol}://${req.get('host')}/uploads/${req.file.filename}`;
   res.status(200).json({ imageUrl: imageUrl });
 });
 
-// Serve static files from the 'uploads' directory
+// Serve static files from the 'uploads' directory (this is api is jus for images uploading)
 app.use('/uploads', express.static('uploads'));
 app.use(express.json({ limit: '50mb' }));
 app.use(express.urlencoded({ limit: '50mb', extended: true }));
