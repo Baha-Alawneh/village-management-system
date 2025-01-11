@@ -13,9 +13,9 @@ const resolvers = {
         if (!user) {
           throw new NotFoundError("User not found");
         }
-        return user[0]; // Return the user data if found
+        return user[0];
       } catch (error) {
-        console.error("Error occurred:", error); // Log the error for debugging
+        console.error("Error occurred:", error);
         throw new Error(error.message || "An error occurred during user lookup.");
       }
     },
